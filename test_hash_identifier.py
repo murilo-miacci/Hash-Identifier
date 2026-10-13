@@ -285,9 +285,9 @@ def test_hash_candidate_is_frozen() -> None:
     Attempting to mutate a HashCandidate must raise an error
     """
     candidate = HashCandidate(
-        algorithm="MD5",
-        confidence="medium",
-        reason="test",
+        algorithm = "MD5",
+        confidence = "medium",
+        reason = "test",
     )
     try:
         candidate.algorithm = "SHA-1"  # type: ignore[misc]
