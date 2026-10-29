@@ -73,7 +73,7 @@ Extend `HashCandidate` with an optional `hashcat_mode: int | None` field. When y
 
 Then print the mode in the table, and update the "next step" nudge at the end of `main()` to suggest the exact hashcat command:
 
-```
+```sh
 Next step: hashcat -m 3200 -a 0 '$2b$12$EixZ...' wordlist.txt
 ```
 
@@ -135,7 +135,7 @@ Add a `crack_difficulty: Literal["trivial", "moderate", "hard", "very_hard"]` fi
 
 **Twist:** for parameterized hashes (bcrypt cost factor, Argon2 memory/time), parse the parameters out of the PHC string. A bcrypt hash with cost factor 4 is much weaker than one with cost factor 14. Have your output reflect that:
 
-```
+```text
 algorithm  difficulty  reason
 ─────────  ──────────  ──────────────────────────────────────────
 bcrypt     moderate    cost=4 — much weaker than the default 12
