@@ -1,6 +1,6 @@
 # Challenges
 
-You've read the code. You know what every line does. Now the only way to make this knowledge actually yours is to *change* the code. This page is a ladder of extensions, easiest to hardest. Don't skip rungs — each one teaches a thing that the next one assumes.
+You've read the code. You know what every line does. Now the only way to make this knowledge actually yours is to _change_ the code. This page is a ladder of extensions, easiest to hardest. Don't skip rungs — each one teaches a thing that the next one assumes.
 
 For every challenge: **write the test first.** Then make the test pass. That's the rhythm professional developers actually use. The test file already shows you the pattern — copy one of the existing `test_*` functions, change the input and expected output, watch it fail, then change the code until it passes.
 
@@ -10,13 +10,13 @@ For every challenge: **write the test first.** Then make the test pass. That's t
 
 `PREFIX_RULES` has ~25 entries today. There are dozens more. Pick one from the list below and add it:
 
-| Prefix       | Algorithm          | Where it comes from                       |
-| ------------ | ------------------ | ----------------------------------------- |
-| `$pbkdf2$`   | PBKDF2-SHA1 (Atlassian) | Older Atlassian / Jira hashes        |
-| `$ml$`       | macOS / iCloud Keychain | Apple PBKDF2-SHA512                  |
-| `{x-pbkdf2}` | PBKDF2 (some Atlassian)  | LDAP-style wrapper                  |
-| `$sha1$`     | sha1crypt          | A rare crypt(3) variant                   |
-| `$md5,`      | Solaris MD5 crypt  | Note the comma instead of `$` — be careful |
+| Prefix       | Algorithm               | Where it comes from                        |
+| ------------ | ----------------------- | ------------------------------------------ |
+| `$pbkdf2$`   | PBKDF2-SHA1 (Atlassian) | Older Atlassian / Jira hashes              |
+| `$ml$`       | macOS / iCloud Keychain | Apple PBKDF2-SHA512                        |
+| `{x-pbkdf2}` | PBKDF2 (some Atlassian) | LDAP-style wrapper                         |
+| `$sha1$`     | sha1crypt               | A rare crypt(3) variant                    |
+| `$md5,`      | Solaris MD5 crypt       | Note the comma instead of `$` — be careful |
 
 **Steps:**
 
@@ -35,7 +35,7 @@ There's no rule for 24 hex chars (96 bits) right now. That length is rare but `T
 2. Write a test (`test_tiger128_length_returns_tiger128`).
 3. Run `just test`.
 
-**Twist:** what should happen if someone passes a 24-character string that *isn't* hex? The existing `_is_hex` check should handle it. Read step 3 of `identify()` and confirm.
+**Twist:** what should happen if someone passes a 24-character string that _isn't_ hex? The existing `_is_hex` check should handle it. Read step 3 of `identify()` and confirm.
 
 ### Challenge 1.3: Add a `--json` output mode
 
@@ -92,13 +92,13 @@ Step 5 only catches JWTs and base64 blobs. Many other things get pasted into has
 - **Base58** — used by Bitcoin addresses and IPFS hashes. Alphabet is `123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz` (no `0`, `O`, `I`, `l`).
 - **Base32** — uppercase letters + digits 2-7. Used by some Tor onion addresses and TOTP secrets.
 
-Each one is a new branch in step 5, returning a LOW-confidence "not a hash" candidate. Be honest with the confidence — these are *shape* hints, not certainties.
+Each one is a new branch in step 5, returning a LOW-confidence "not a hash" candidate. Be honest with the confidence — these are _shape_ hints, not certainties.
 
 ## Tier 3 — extend the model
 
 ### Challenge 3.1: Multi-hash detection in one string
 
-Some breach dumps contain *combined* records like `user:hash:salt`. Real workflows often have to split these into the constituent parts before identification. Add a `--split` mode that:
+Some breach dumps contain _combined_ records like `user:hash:salt`. Real workflows often have to split these into the constituent parts before identification. Add a `--split` mode that:
 
 1. Takes a string with colon-separated fields.
 2. Identifies each field independently.
@@ -112,7 +112,7 @@ Some breach dumps contain *combined* records like `user:hash:salt`. Real workflo
 
 ### Challenge 3.2: Confidence rebalancing with evidence weights
 
-Right now `confidence` is a single value: high, medium, or low. But evidence is more nuanced. A 32-hex string that *also* contains no characters above 'f' is "very likely hex." A 13-character string from the DES charset is "13-char DES-compatible" but the same characters could appear in many short strings.
+Right now `confidence` is a single value: high, medium, or low. But evidence is more nuanced. A 32-hex string that _also_ contains no characters above 'f' is "very likely hex." A 13-character string from the DES charset is "13-char DES-compatible" but the same characters could appear in many short strings.
 
 Replace `confidence: Literal["high", "medium", "low"]` with `confidence_score: float` in the range 0.0–1.0. Compute the score from multiple evidence weights:
 
@@ -127,7 +127,7 @@ Then in the CLI, map score back to a color (>0.8 green, 0.5–0.8 yellow, <0.5 c
 
 **What you learn:** how scoring systems work under the hood. This is the same idea as Bayesian spam classifiers, search relevance ranking, and antivirus heuristics — combine multiple weak signals into one numeric score, then bucket for display.
 
-### Challenge 3.3: Suggest the *crack difficulty* alongside the algorithm
+### Challenge 3.3: Suggest the _crack difficulty_ alongside the algorithm
 
 Once you know the algorithm, you also implicitly know how hard the hash is to crack. MD5 cracks at billions of guesses per second on a modern GPU; bcrypt at thousands. Argon2id with strong parameters might be hundreds.
 
@@ -185,13 +185,13 @@ This is the kind of "small tool, real impact" project that ends up in real secur
 
 ### Challenge 5.1: Why is this a hard problem?
 
-So far we've matched on *structure*: prefix, length, charset. But the model has limits. Consider:
+So far we've matched on _structure_: prefix, length, charset. But the model has limits. Consider:
 
-- Two different algorithms producing the same length output (MD5 vs NTLM at 32 hex chars). We *can't* distinguish them from structure alone.
+- Two different algorithms producing the same length output (MD5 vs NTLM at 32 hex chars). We _can't_ distinguish them from structure alone.
 - An algorithm whose output is sometimes uppercase and sometimes lowercase (different libraries produce different cases for the same algo).
 - A truncated SHA-256 — someone took the first 32 hex chars of a SHA-256 output and called it a "hash." We'd identify it as MD5.
 
-Write a short document (`docs/limitations.md`) listing every case where the tool *cannot* distinguish two formats and explain why. This is the kind of honesty good security tools document up-front. Don't pretend the tool is more capable than it is.
+Write a short document (`docs/limitations.md`) listing every case where the tool _cannot_ distinguish two formats and explain why. This is the kind of honesty good security tools document up-front. Don't pretend the tool is more capable than it is.
 
 ### Challenge 5.2: Probabilistic identification with a ML classifier
 
@@ -210,7 +210,7 @@ Build a tiny experiment:
 
 ## Where to go after the challenges
 
-If you finished tier 4 or 5, you should now have a strong feel for the *whole loop*: read code → understand → modify → test → measure → document. That loop is the entire job of a security engineer. The specific topic doesn't matter much — you'd do the same loop for a port scanner, a fuzzer, a SIEM rule, or a vulnerability scanner.
+If you finished tier 4 or 5, you should now have a strong feel for the _whole loop_: read code → understand → modify → test → measure → document. That loop is the entire job of a security engineer. The specific topic doesn't matter much — you'd do the same loop for a port scanner, a fuzzer, a SIEM rule, or a vulnerability scanner.
 
 When you're ready for more:
 

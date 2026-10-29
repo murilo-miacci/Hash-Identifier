@@ -86,6 +86,16 @@ def test_apr1_prefix_is_recognized() -> None:
     assert candidates[0].confidence == "high"
 
 
+def test_pbkdf2_sha1_prefix_is_recognized() -> None:
+    """
+    Older Atlassian / Jira hashes start with $pbkdf2$
+    """
+    sample = "$pbkdf2$[iterações]$[salt_em_base64]$[hash_em_base64]"
+    candidates = identify(sample)
+    assert candidates[0].algorithm == "PBKDF2-SHA1 (Atlassian)"
+    assert candidates[0].confidence == "high"
+
+
 # =============================================================================
 # Special formats
 # =============================================================================
@@ -285,9 +295,9 @@ def test_hash_candidate_is_frozen() -> None:
     Attempting to mutate a HashCandidate must raise an error
     """
     candidate = HashCandidate(
-        algorithm = "MD5",
-        confidence = "medium",
-        reason = "test",
+        algorithm="MD5",
+        confidence="medium",
+        reason="test",
     )
     try:
         candidate.algorithm = "SHA-1"  # type: ignore[misc]
