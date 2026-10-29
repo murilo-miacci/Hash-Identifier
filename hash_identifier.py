@@ -99,6 +99,7 @@ _HEX_UPPER_CHARSET: frozenset[str] = frozenset("0123456789ABCDEF")
 
 HEX_LENGTH_RULES: dict[int, list[str]] = {
     16: ["MySQL323", "CRC-64"],
+    24: ["Tiger-128"],
     32: ["MD5", "NTLM", "MD4", "RIPEMD-128"],
     40: ["SHA-1", "RIPEMD-160"],
     48: ["Tiger-192"],
